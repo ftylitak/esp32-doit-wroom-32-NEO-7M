@@ -1,10 +1,10 @@
 /**
- * The sketch is for communication between PC and any other device using Arduino Mega. With u-blox NEO-7M in the case.
+ * The sketch is for communication between serial device and the retransmittion of the date via Bluetooth. With u-blox NEO-7M in the case as the serial device.
  *
  * u-blox NEO-7M - Arduino Mega
- * VCC - 5V
- * RX - TX3
- * TX - RX3
+ * VCC - 3V
+ * RX - TX2
+ * TX - RX2
  * GND - GND
  */
  
@@ -15,8 +15,6 @@
 
 BluetoothSerial SerialBT;
 HardwareSerial Serial3(2);
-
-unsigned char buffer[256];
 
 void setup()
 {
@@ -30,31 +28,15 @@ void setup()
 // If there is a data from the receiver, read it and send to the PC or vice versa
 void loop()
 {
-  int pos = 0;
   String str;
 
     if (Serial3.available())
     {
-        //pos = Serial3.readBytesUntil('\n', buffer, 256);
         str = Serial3.readStringUntil('\n');
         str += '\n';
-      
-//        if(pos < 255) 
-//        {
-//          buffer[pos-2] = (char) lf;
-//          //buffer[pos-2] = (char) 13;
-////          buffer[pos-1] = (char) 10;
-//        }
           
         SerialBT.print(str);
-        //SerialBT.write(buffer, pos);
-        //Serial.write(Serial3.read());
     }
-
-//    if (SerialBT.available())
-//    {
-//        Serial3.write(SerialBT.read());
-//    }
 }
 
 // Send a packet to the receiver to change frequency to 100 ms
@@ -88,7 +70,5 @@ void sendPacket(byte *packet, byte len)
     {
         Serial3.write(packet[i]);
     }
-
-   // printPacket(packet, len);
 }
 
