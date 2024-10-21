@@ -15,21 +15,22 @@
 
 BluetoothSerial SerialBT;
 HardwareSerial Serial3(2);
+String str;
 
 void setup()
 {
     Serial.begin(PC_BAUDRATE);
-    Serial3.begin(GPS_BAUDRATE);
+    Serial3.begin(GPS_BAUDRATE, SERIAL_8N1, 16, 17);
     SerialBT.begin("ESP32");
     
     changeFrequency();
+
+    Serial.print("All ready");
 }
 
 // If there is a data from the receiver, read it and send to the PC or vice versa
 void loop()
 {
-  String str;
-
     if (Serial3.available())
     {
         str = Serial3.readStringUntil('\n');
@@ -71,4 +72,3 @@ void sendPacket(byte *packet, byte len)
         Serial3.write(packet[i]);
     }
 }
-
